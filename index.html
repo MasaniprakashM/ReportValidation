@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Render Array of Objects</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif<div class="offer-display-feature-text a-size-small" offer-display-feature-name="desktop-merchant-info" data-csa-c-type="widget" data-csa-c-slot-id="odf-feature-text-desktop-merchant-info" data-csa-c-content-id="desktop-merchant-info" data-csa-c-id="tge3xa-ur9jh6-n5hs8a-yghjkb">
+                                      <div class="offer-display-feature-text a-spacing-none odf-truncation-popover aok-inline-block">
+                     <a href="/gp/help/seller/at-a-glance.html/ref=dp_merchant_link?ie=UTF8&amp;seller=A2L97JA8DAGJXC&amp;asin=B007CPPTNO&amp;ref_=dp_merchant_link" id="sellerProfileTriggerId" class="a-size-small a-link-normal offer-display-feature-text-message">PartsHawk</a> </div>
+                                                               <span class="a-declarative" data-action="a-popover" data-a-popover="{&quot;name&quot;:&quot;offerDisplayFeatureMerchantInfoPopover-0&quot;,&quot;activate&quot;:&quot;onmouseover&quot;,&quot;position&quot;:&quot;triggerBottom&quot;,&quot;popoverLabel&quot;:&quot;Shipper / Seller&quot;,&quot;max-width&quot;:&quot;500&quot;}"> <a data-csa-c-content-id="odf-desktop-merchant-info" data-csa-c-slot-id="odf-desktop-merchant-info-anchor-text" data-csa-c-type="widget" class="a-link-normal a-popover-trigger a-declarative odf-truncation-popover aok-hidden" href="javascript:void(0)" role="button" data-csa-c-id="coirk1-umr8hh-1pu1ze-lqh73h"> <span class="a-size-small offer-display-feature-text-message">PartsHawk</span> </a> </span>     <div class="a-popover-preload" id="a-popover-offerDisplayFeatureMerchantInfoPopover-0"> <div data-csa-c-content-id="desktop-merchant-info" data-csa-c-slot-id="odf-desktop-merchant-info-popover-description" data-csa-c-type="widget" class="a-section a-padding-none" data-csa-c-id="599qbm-cdmt9f-8jxjh5-dwt1fm">  <div aria-level="5" class="a-row a-spacing-base" role="heading">  <span class="a-text-bold">Shipper / Seller</span> </div>  <div class="a-row a-spacing-micro odf-popover-overflow-wrap">    <a href="/gp/help/seller/at-a-glance.html/ref=dp_merchant_link?ie=UTF8&amp;seller=A2L97JA8DAGJXC&amp;asin=B007CPPTNO&amp;ref_=dp_merchant_link" id="sellerProfileTriggerId" class="a-size-small a-link-normal offer-display-feature-text-message">PartsHawk</a>    </div>  </div> </div>             </div>
+      background: #f4f6f8;
+      padding: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 220px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 6px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+
+    .url {
+      padding: 8px 0;
+    }
+
+    .url a {
+      color: #1a73e8;
+      font-weight: 600;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .field {
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .label {
+      font-weight: 600;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    .copy-btn {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h3>Paste Array of Objects</h3>
+
+  <textarea id="inputData" placeholder="Paste your array of objects here..."></textarea>
+
+  <br>
+
+  <button onclick="renderData()">Display Data</button>
+
+  <label style="margin-left:12px;">
+    <input type="checkbox" id="showHtml">
+    Show HTML
+  </label>
+
+  <label style="margin-left:12px;">
+    <input type="checkbox" id="showDocsHtml">
+    Show Docs HTML
+  </label>
+
+  <div id="error" class="error"></div>
+  <div id="container"></div>
+
+  <script>
+    let parsedData = [];
+
+    function renderData() {
+      const input = document.getElementById('inputData').value;
+      const container = document.getElementById('container');
+      const errorDiv = document.getElementById('error');
+
+      const showHtml = document.getElementById('showHtml').checked;
+      const showDocsHtml = document.getElementById('showDocsHtml').checked;
+
+      container.innerHTML = '';
+      errorDiv.textContent = '';
+
+      try {
+        parsedData = JSON.parse(input);
+
+        if (!Array.isArray(parsedData)) {
+          throw new Error('Input must be an array');
+        }
+
+        parsedData.sort((a, b) => {
+          if (a.presence === 'absent' && b.presence !== 'absent') return -1;
+          if (a.presence !== 'absent' && b.presence === 'absent') return 1;
+          return 0;
+        });
+
+      } catch (err) {
+        errorDiv.textContent = 'Invalid JSON: ' + err.message;
+        return;
+      }
+
+      parsedData.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const htmlBlock = showHtml ? `
+          <div class="url">
+            <a href="${item.url.replace('.jpg','.html')}" target="_blank">
+              ${item.url.replace('.jpg','.html')}
+            </a>
+          </div>
+        ` : '';
+
+        const docsHtmlBlock = showDocsHtml ? `
+          <div class="url">
+            <a href="${item.url.replace('.jpg','.json').replace('/detail/','/detail/docs_')}"
+               target="_blank">
+              ${item.url.replace('.jpg','.json').replace('/detail/','/detail/docs_')}
+            </a>
+          </div>
+        ` : '';
+
+        card.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>${index + 1} - ${item.presence ?? ''}</div>
+            <button class="copy-btn" onclick="copyObject(${index})" title="Copy object">
+              📋
+            </button>
+          </div>
+          ${
+            item.url 
+              ? `<div class="url">
+                <a href="${item.url}" target="_blank">${item.url}</a>
+              </div>`
+              :''
+          }
+          
+          ${
+            item.gather_url 
+              ? `<div class="url">
+                <a href="${item.gather_url}" target="_blank">${item.gather_url}</a>
+              </div>`
+              :''
+          }
+          
+          ${
+            item.gather_screenshot_url 
+              ? `<div class="url">
+                <a href="${item.gather_screenshot_url}" target="_blank">${item.gather_screenshot_url}</a>
+              </div>`
+              :''
+          }
+          ${
+            item.screenshotURL 
+              ? `<div class="url">
+                <a href="${item.screenshotURL}" target="_blank">${item.screenshotURL}</a>
+              </div>`
+              :''
+          }
+
+          ${htmlBlock}
+          ${docsHtmlBlock}
+          ${
+            item.reasoning
+              ? `<div class="field"><span class="label">Reasoning:</span> ${item.reasoning}</div>`
+              : ''
+          }
+          ${
+            item.anomaly_score
+              ? `<div class="field"><span class="label">Anomaly Score:</span> ${item.anomaly_score}</div>`
+              : ''
+          }
+          ${
+            item.anomaly_reasons
+              ? `<div class="field"><span class="label">Anomaly Reasons:</span> ${item.anomaly_reasons}</div>`
+              : ''
+          }
+          ${
+            item.detected_via
+              ? `<div class="field"><span class="label">Detected Via:</span> ${item.detected_via}</div>`
+              : ''
+          }
+          ${
+            item.attribute_value
+              ? `<div class="field"><span class="label">Attribute Value:</span> ${item.attribute_value}</div>`
+              : ''
+          }
+          ${
+            item.historical_value
+              ? `<div class="field"><span class="label">Historical Value:</span> ${item.historical_value}</div>`
+              : ''
+          }
+          ${
+            item.presence
+              ? `<div class="field"><span class="label">Presence:</span> ${item.presence}</div>`
+              : ''
+          }
+          ${
+            item.image_urls && item.image_urls?.length !== 0
+              ? 
+              `<div class="field"><span class="label">Image URLs: </span> ${
+                item.image_urls?.map(url=>(
+                  `<div class="url">
+                    <a href="${url}" target="_blank">${url}</a>
+                  </div>`
+                ))
+              }</div>`
+              : ''
+          }
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function copyObject(index) {
+      const text = JSON.stringify(parsedData[index], null, 2);
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text)
+          .then(() => alert('Copied'))
+          .catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.top = '-9999px';
+      document.body.appendChild(textarea);
+
+      textarea.focus();
+      textarea.select();
+
+      try {
+        document.execCommand('copy');
+        alert('Copied');
+      } catch {
+        alert('Copy failed');
+      }
+
+      document.body.removeChild(textarea);
+    }
+  </script>
+
+</body>
+</html>
