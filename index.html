@@ -208,6 +208,21 @@
               : ''
           }
           ${
+            item.confidence
+              ? `<div class="field"><span class="label">Confidence:</span> ${item.confidence}</div>`
+              : ''
+          }
+          ${
+            item.product_id
+              ? `<div class="field"><span class="label">Product ID:</span> ${item.product_id}</div>`
+              : ''
+          }
+          ${
+            item.product_name
+              ? `<div class="field"><span class="label">Product Name:</span> ${item.product_name}</div>`
+              : ''
+          }
+          ${
             item.attribute_value
               ? `<div class="field"><span class="label">Attribute Value:</span> ${item.attribute_value}</div>`
               : ''
