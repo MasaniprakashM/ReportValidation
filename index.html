@@ -124,11 +124,27 @@
     <input type="checkbox" id="showDocsHtml">
     Show Docs HTML
   </label>
+  
+  <button onclick="clearStorage()">Clear Data</button>
 
   <div id="error" class="error"></div>
   <div id="container"></div>
 
   <script>
+    
+    window.onload = function () {
+      const savedData = localStorage.getItem('jsonInput');
+      if (savedData) {
+        document.getElementById('inputData').value = savedData;
+        renderData();
+      }
+    };
+
+    function clearStorage() {
+      localStorage.removeItem('jsonInput');
+      location.reload();
+    }
+
     let parsedData = [];
 
     function renderData() {
@@ -168,6 +184,9 @@
         errorDiv.textContent = 'Invalid JSON: ' + err.message;
         return;
       }
+      
+      
+      localStorage.setItem('jsonInput', JSON.stringify(parsedData));
 
       parsedData.forEach((item, index) => {
         const card = document.createElement('div');
